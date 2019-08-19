@@ -4,10 +4,10 @@ Code for "[Higher-Order Income Dynamics with Linked Regression Trees](http://web
 
 ## Requirements
 
-1. SAS (Used: SAS 9.4)
-2. Stata (Used: Stata 15)
-3. MATLAB + C++ compiler (Used: MATLAB 2019a with Microsof Visual Studio 2017 Community Edition)
-4. Python 3.7 (Used: Anaconda 2019.03)
+1. SAS (used: SAS 9.4)
+2. Stata (used: Stata 15)
+3. MATLAB + C++ compiler (used: MATLAB 2019a with Microsof Visual Studio 2017 Community Edition)
+4. Python 3.7 (used: Anaconda 2019.03)
 
 ## Data inputs
 
@@ -17,7 +17,7 @@ Code for "[Higher-Order Income Dynamics with Linked Regression Trees](http://web
 
 ## ReadMe
 
-Everything can be run from **main.ipynb.**.
+Everything can be run from **main.ipynb**.
 
 It calls:
 
