@@ -7,9 +7,9 @@ function [par] = LRT()
     par.prefix = 'LRT';
 
     % a. grids
-    par.NA = 150;
-    par.NM = par.NA+200;    
-    par.NN = 100;
+    par.NA = 50;
+    par.NM = par.NA+50;    
+    par.NN = 30;
     par.NP = 1;
 
         % grid specifications
@@ -36,7 +36,7 @@ function [par] = LRT()
     par.beta = 0.96;
     par.rho = 2.0;
     par.sigma = 2.0;
-    par.zeta = 5.0;
+    par.zeta = 8.0;
 
     % d. old income process
     par.sigma_psi = 0.0;

@@ -1,4 +1,4 @@
-%% ############################## ABB 2017 ################################
+%% ####################### ABB 2017: Estimate #############################
 % 
 % Code for Arellano, Blundell and Bonhomme (2017; ECTA), 
 %   "Earnings and Consumption Dynamics: A Nonlinear Panel Data Framework"
@@ -69,31 +69,5 @@ par = abb2017.estimate(data, par, USEWAITBAR);
 ii=round(maxiter/2):maxiter; % assumes burnin of maxiter/2
 par = abb2017.assign_par_to_mean_of_chain(par, ii);
 
-%% ############################# SIMULATE #################################
-
-% 1. read 100% sample 
-Ydat = csvread('../data/logY_p100.csv'); 
-
-% 2. simulate data with same N 
-Nsim = size(Ydat, 1); 
-ages_sim = 30:59; 
-par_sim = par; 
-par_sim.T = 30; 
-Ysim = abb2017.simulate_data(Nsim, ages_sim, data, par_sim); 
-
-% 3. write to disk 
-csvwrite('../data/abb_sim.csv', Ysim); 
-fprintf('Simulation written to disk.\n'); 
-
-
-%% ############################### PLOT ###################################
-
-% 1. do a small sanity check 
-par.T = 15; 
-abb2017.simulate_and_compare_AR1_regression(data, par); 
-
-% 2. compare moments on full sample 
-first_age = 30; % t=1 corresponds to age 30 
-DOSAVE = false; 
-abb2017.plot_moment_comparisons(Ysim, Ydat, first_age, DOSAVE)
-
+% 4. save 
+abb2017.write_parameters_to_script(par); 

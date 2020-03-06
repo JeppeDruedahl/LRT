@@ -13,13 +13,13 @@ model.mex_simulate(threads);
 
 % a. which
 do_simple = 0;
-do_noLRT = 0; % 1
+do_noLRT = 0;
 do_LRT = 1;
-do_CRRA = 0; % 0
-do_ez = 1; 
-do_extra_noLRT = 0; % 1
+do_CRRA = 1;
+do_ez = 0; % 1 
+do_extra_noLRT = 0;
 rhos_noLRT = [];
-rhos_LRT = [4]; %[2,3,4]; TEMP TEMP TEMP
+rhos_LRT = [2,3,4];
 
 % b. what
 do_estimate = 1;
@@ -129,9 +129,3 @@ end
 
 write_table
 move_figs_tabs
-
-%% 8. clean up
-
-rmdir('figs_tabs')
-delete('log*.txt')
-delete('*.mexw64')

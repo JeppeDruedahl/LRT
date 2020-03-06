@@ -594,6 +594,7 @@ classdef abb2017
             
             N = par.N; 
             T = par.T; 
+            assert( size(data.AGE, 2) == T, 'data.AGE is %d*%d, but (par.N,par.T)=(%d,%d).', size(data.AGE,1), size(data.AGE,2), par.N,par.T);
             assert( all(size(data.V_draw_eta) == [N,T]), 'dimension failure'); 
             
             % ------------------- draw eta (persistent component) ---------------------
@@ -654,10 +655,11 @@ classdef abb2017
             N = numel(V_draw);
             Ntau = numel(Vectau);
             
+            assert(not(isempty(Params)), 'Parameter matrix empty: uninitialized par.eta_t?')
             assert(isvector(V_draw));
             assert(~isempty(Xmat), 'No Xmat input!'); 
             assert(all(size(Params) == [size(Xmat,2),Ntau]));
-            assert(size(Xmat,1) == size(V_draw,1));
+            assert(size(Xmat,1) == size(V_draw,1), 'Xmat has %d rows, but V_draw has %d.', size(Xmat,1), size(V_draw,1));
             
             eta_draws = zeros(N,1);
             
@@ -1065,6 +1067,87 @@ classdef abb2017
             par.eta_t.print();
             fprintf('--- eps ---\n'); 
             par.eps.print();
+        end
+        
+        function write_parameters_to_script(par)
+            % write_parameters_to_script(par)
+            %
+            %   Writes the file "read_par_estimates.m", which contains a
+            %   single function of the same name, which will return a par
+            %   struct populated with the estimated parameters from the
+            %   micro data. 
+            %
+            
+            floatFmt = '%18.8g'; 
+            intFmt = '%8d'; 
+            
+            fid = fopen('read_par_estimates.m', 'w'); 
+            
+            fprintf(fid, 'function par = read_par_estimates() \n'); 
+            fprintf(fid, '%% Returns a par struct with parameters estimated using Danish micro data. \n%%Estimates are based on a sample of %d households over %d years. \n\n\n', par.N, par.T); 
+            fprintf(fid, 'par = struct();\n\n'); 
+            
+            fprintf(fid, '%% --- Scalars ---\n'); 
+            scalars = {'meanAGE', 'stdAGE', 'meanY', 'stdY', 'K1', 'K2', 'K3', 'K4', 'KPolyAgeResid', 'N', 'T', 'draws', 'USEFMIN', 'maxiter'}; 
+            for i=1:numel(scalars)
+                scalPrintStr = sprintf('%-16s = %s; \\n', sprintf('par.(''%s'') ', scalars{i}), floatFmt); 
+                fprintf(fid, scalPrintStr, par.(scalars{i})); 
+            end
+            
+            fprintf(fid, '\n\n%% --- Vectors ---\n'); 
+            vectors = {'Vectau', 'var_prop', 'coeff_Y_on_age_standardized'}; 
+            for i=1:numel(vectors)
+                N = numel(par.(vectors{i})); 
+                fprintf(fid, 'par.(''%s'') = [ ', vectors{i}); 
+                for j=1:N-1
+                    fprintf(fid, sprintf('%s ; ', floatFmt), par.(vectors{i})(j)); 
+                end
+                fprintf(fid, sprintf('%s ] ;\n', floatFmt), par.(vectors{i})(end));
+            end
+            
+            fprintf(fid, '\n%% --- Precomputed ---\n'); 
+            fprintf(fid, 'par.precomputed = struct(); \n'); 
+            vectors = {'ii1_K1K2', 'ii2_K1K2'}; 
+            for i=1:numel(vectors)
+                N = numel(par.precomputed.(vectors{i})); 
+                fprintf(fid, 'par.precomputed.(''%s'') = [ ', vectors{i}); 
+                for j=1:N-1
+                    fprintf(fid, sprintf('%s , ', intFmt), par.precomputed.(vectors{i})(j)); 
+                end
+                fprintf(fid, sprintf('%s ] ;\n', intFmt), par.precomputed.(vectors{i})(end));                
+            end
+            
+            
+            fprintf(fid, '\n%% ############# Estimates ############# \n'); 
+            ests = {'eps', 'eta_0', 'eta_t'}; 
+            for i=1:numel(ests)
+                fprintf(fid, '\n\n%% --- %s ---\n', ests{i}); 
+                
+                % 1. create b1, bL
+                fprintf(fid, sprintf('b1 = %s;\\n', floatFmt), par.(ests{i}).b1); 
+                fprintf(fid, sprintf('bL = %s;\\n', floatFmt), par.(ests{i}).bL); 
+                
+                % 2. create Param 
+                X = par.(ests{i}).Param; 
+                fprintf(fid, 'Param = [ ...\n'); 
+                for iR=1:size(X,1)
+                for iC=1:size(X,2)-1
+                    fprintf(fid, sprintf('%s , ', floatFmt), X(iR,iC)); 
+                end 
+                fprintf(fid, sprintf('%s; \\n', floatFmt), X(iR,end)); 
+                end
+                fprintf(fid, '   ];\n'); 
+                % 3. put into par
+                fprintf(fid, 'par.(''%s'') = abb_par(Param, b1, bL);\n', ests{i}); 
+            end
+            
+            fprintf(fid, 'end \n'); 
+            fclose(fid);
+        end
+        
+        function load_pararameter_estimates()
+            assert(exist('read_par_estimates', 'file'), 'Cannot find file, "read_par_estimates.m".'); 
+            par = read_par_estimates(); 
         end
         
     end

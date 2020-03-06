@@ -250,8 +250,8 @@ function par = estimate_preferences(par)
 
     goal = @(x) model.obj_preferences(x,par);
 
-    options = optimoptions(@fmincon,'Display','none',...
-        'StepTolerance',1e-4,'OptimalityTolerance',1e-4);
+    options = optimoptions(@fmincon,'Display','none','FiniteDifferenceStep',1e-3,...
+        'StepTolerance',1e-3,'OptimalityTolerance',1e-3);
     lb = [0.85 0.50];
     ub = [0.99 10.00];
     x0 = [par.beta,par.zeta];

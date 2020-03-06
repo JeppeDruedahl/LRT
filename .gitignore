@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# details
+data/*.csv
+ConSav/figs_tabs
+ConSav/*.txt
+ConSav/*.mexw64
