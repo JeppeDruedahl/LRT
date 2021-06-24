@@ -1,6 +1,6 @@
 # LRT
 
-Code for [Higher-Order Income Dynamics with Linked Regression Trees](https://drive.google.com/open?id=18j-uGjIBF3YzQolRQgKUmkSg3JsPiqjp), [Druedahl](http://web.econ.ku.dk/druedahl) and [Munk-Nielsen](http://web.econ.ku.dk/munk-nielsen), 2020).
+Code for [Higher-Order Income Dynamics with Linked Regression Trees](https://drive.google.com/open?id=18j-uGjIBF3YzQolRQgKUmkSg3JsPiqjp), [Druedahl](http://web.econ.ku.dk/druedahl) and [Munk-Nielsen](https://sites.google.com/view/munk-nielsen/), 2020).
 
 ## Requirements
 
